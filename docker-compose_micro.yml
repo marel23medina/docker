@@ -1,0 +1,27 @@
+version: '2.4'
+services:
+  micro_ros:
+    container_name: micro_ros
+    image: micro-ros
+    build:
+      context: ..
+      dockerfile: docker/test.Dockerfile
+    environment:
+      DISPLAY: $DISPLAY
+      ROS_DOMAIN_ID: $ROS_DOMAIN_ID
+    network_mode: host
+    ipc: host
+    privileged: true
+    stdin_open: true
+    volumes:
+      - /dev/shm:/dev/shm
+      - /dev/bus/usb:/dev/bus/usb
+      - /dev:/dev
+      - ../src:/root/src
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - $HOME/micro_ros_ws/:/root/ros2_ws/microros_ws/
+      - $HOME/.Xauthority:/root/.Xauthority
+    device_cgroup_rules:
+      - 'c 81:* rmw'
+      - 'c 189:* rmw'
+    command: tail -f /dev/null
